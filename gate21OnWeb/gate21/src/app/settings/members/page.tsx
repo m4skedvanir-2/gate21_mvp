@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { useRouter } from "next/navigation";
 import styles from "@/app/styles/AuthForm.module.css";
 
@@ -30,8 +29,11 @@ export default function MembersPage() {
 
     if (!token) { router.push("/login"); return; }
 
-    invoke<CurrentUser>("get_me", { token })
-      .then((user) => {
+    fetch("http://localhost:8080/api/auth/me", {
+      headers: { "Authorization": `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((user: CurrentUser) => {
         if (user.role !== "admin") router.push("/");
         setCurrentUser(user);
       })
@@ -44,19 +46,37 @@ export default function MembersPage() {
     setIsLoading(true);
     setMessage("");
     try {
-      await invoke("create_member", {
-        organizationId: currentUser.organization_id,
-        email,
-        username,
-        password,
-        role,
+      const token = document.cookie
+        .split("; ")
+        .find((r) => r.startsWith("gate21_token="))
+        ?.split("=")[1] ?? "";
+
+      const res = await fetch("http://localhost:8080/api/auth/members", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email,
+          username,
+          password,
+          role,
+        }),
       });
+
+      if (!res.ok) {
+        setIsError(true);
+        setMessage("メンバーの作成に失敗しました");
+        return;
+      }
+
       setIsError(false);
       setMessage("メンバーを作成しました");
       setEmail(""); setUsername(""); setPassword("");
-    } catch (err) {
+    } catch {
       setIsError(true);
-      setMessage(String(err));
+      setMessage("サーバーに接続できません");
     } finally {
       setIsLoading(false);
     }

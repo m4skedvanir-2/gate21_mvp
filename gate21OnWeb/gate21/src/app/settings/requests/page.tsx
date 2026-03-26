@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { useRouter } from "next/navigation";
 import styles from "@/app/styles/AuthForm.module.css";
 
@@ -17,38 +16,55 @@ type Request = {
 export default function RequestsPage() {
   const router = useRouter();
   const [requests, setRequests] = useState<Request[]>([]);
-  const [reviewerId, setReviewerId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const getToken = () =>
+    document.cookie.split("; ").find((r) => r.startsWith("gate21_token="))?.split("=")[1] ?? "";
+
   useEffect(() => {
-    const token = document.cookie.split("; ").find((r) => r.startsWith("gate21_token="))?.split("=")[1];
+    const token = getToken();
     if (!token) { router.push("/login"); return; }
 
-    invoke<{ user_id: string; organization_id: string; role: string }>("get_me", { token })
-      .then((me) => {
-        if (me.role !== "admin") router.push("/");
-        setReviewerId(me.user_id);
-        return invoke<Request[]>("list_asset_requests", { organizationId: me.organization_id });
+    fetch("http://localhost:8080/api/auth/me", {
+      headers: { "Authorization": `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(async (me) => {
+        if (me.role !== "admin") { router.push("/"); return; }
+        const res = await fetch("http://localhost:8080/api/assets/requests", {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setRequests(data);
       })
-      .then((data) => setRequests(data as Request[]))
       .catch(() => router.push("/login"));
   }, []);
 
   const handleReview = async (requestId: string, approved: boolean) => {
     setIsLoading(true);
     try {
-      const msg = await invoke<string>("review_asset_request", {
-        requestId,
-        reviewerId,
-        approved,
+      const token = getToken();
+      const res = await fetch(`http://localhost:8080/api/assets/requests/${requestId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ approved }),
       });
-      alert(msg);
-      setRequests((prev) => prev.map((r) => r.id === requestId
-        ? { ...r, status: approved ? "approved" : "rejected" }
-        : r
+
+      if (!res.ok) {
+        alert("処理に失敗しました");
+        return;
+      }
+
+      setRequests((prev) => prev.map((r) =>
+        r.id === requestId
+          ? { ...r, status: approved ? "approved" : "rejected" }
+          : r
       ));
-    } catch (err) {
-      alert(String(err));
+    } catch {
+      alert("サーバーに接続できません");
     } finally {
       setIsLoading(false);
     }

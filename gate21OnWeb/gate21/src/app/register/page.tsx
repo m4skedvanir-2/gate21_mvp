@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { useRouter } from "next/navigation";
 import styles from "@/app/styles/AuthForm.module.css";
 
@@ -19,10 +18,19 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError("");
     try {
-      await invoke("register", { organizationName, email, username, password });
+      const res = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ organizationName, email, username, password }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message ?? "登録に失敗しました");
+        return;
+      }
       router.push("/login");
-    } catch (err) {
-      setError(String(err));
+    } catch {
+      setError("サーバーに接続できません");
     } finally {
       setIsLoading(false);
     }

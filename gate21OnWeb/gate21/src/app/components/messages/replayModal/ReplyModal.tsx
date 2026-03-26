@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Modal from "@/app/components/common/Modal/Modal";
+import Modal from "@/app/components/common/modal/Modal";
 import { useModalStore } from "@/app/stores/useModalStore";
 import { useMessageStore } from "@/app/stores/useMessageStore";
 import styles from "./ReplyModal.module.css";

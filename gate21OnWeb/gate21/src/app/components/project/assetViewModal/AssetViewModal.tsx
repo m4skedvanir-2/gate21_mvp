@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { decryptFromVault, encryptForVault } from "@/app/lib/vault";
 import Modal from "@/app/components/common/modal/Modal";
 import { useModalStore } from "@/app/stores/useModalStore";
 import styles from "../assetModal/AssetModal.module.css";
 
 type Mode = "unlock" | "view" | "update" | "delete";
+
+const getToken = () =>
+  document.cookie.split("; ").find((r) => r.startsWith("gate21_token="))?.split("=")[1] ?? "";
 
 export default function AssetViewModal() {
   const { openModal, selectedAssetId, close } = useModalStore();
@@ -34,11 +36,13 @@ export default function AssetViewModal() {
     if (!vaultPassword) return;
     setIsLoading(true); setError("");
     try {
-      const serverDecrypted = await invoke<string>("get_asset", {
-        assetId: selectedAssetId,
-        vaultPassword,
+      const token = getToken();
+      const res = await fetch(`http://localhost:8080/api/assets/decrypt/${selectedAssetId}`, {
+        headers: { "Authorization": `Bearer ${token}` },
       });
-      const plaintext = await decryptFromVault(serverDecrypted, vaultPassword);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const plaintext = await decryptFromVault(data.value, vaultPassword);
       setDecryptedValue(plaintext);
       setMode("view");
     } catch {
@@ -52,17 +56,22 @@ export default function AssetViewModal() {
     if (!newValue || !vaultPassword) return;
     setIsLoading(true); setError("");
     try {
-      const token = document.cookie.split("; ").find((r) => r.startsWith("gate21_token="))?.split("=")[1] ?? "";
-      const me = await invoke<{ user_id: string; organization_id: string }>("get_me", { token });
+      const token = getToken();
       const encryptedNewValue = await encryptForVault(newValue, vaultPassword);
-      await invoke("request_asset_change", {
-        assetId: selectedAssetId,
-        requestType: "update",
-        requestedBy: me.user_id,
-        organizationId: me.organization_id,
-        newName: newName || null,
-        newValue: encryptedNewValue,
+      const res = await fetch(`http://localhost:8080/api/assets/requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          asset_id: selectedAssetId,
+          request_type: "update",
+          new_name: newName || null,
+          new_value: encryptedNewValue,
+        }),
       });
+      if (!res.ok) throw new Error();
       setMessage("更新申請を送信しました。管理者の承認をお待ちください。");
       setMode("view");
     } catch (err) {
@@ -76,16 +85,21 @@ export default function AssetViewModal() {
     if (!deleteReason) return;
     setIsLoading(true); setError("");
     try {
-      const token = document.cookie.split("; ").find((r) => r.startsWith("gate21_token="))?.split("=")[1] ?? "";
-      const me = await invoke<{ user_id: string; organization_id: string }>("get_me", { token });
-      await invoke("request_asset_change", {
-        assetId: selectedAssetId,
-        requestType: "delete",
-        requestedBy: me.user_id,
-        organizationId: me.organization_id,
-        newName: deleteReason,
-        newValue: null,
+      const token = getToken();
+      const res = await fetch(`http://localhost:8080/api/assets/requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          asset_id: selectedAssetId,
+          request_type: "delete",
+          new_name: deleteReason,
+          new_value: null,
+        }),
       });
+      if (!res.ok) throw new Error();
       setMessage("削除申請を送信しました。管理者の承認をお待ちください。");
       setMode("view");
     } catch (err) {
@@ -94,7 +108,6 @@ export default function AssetViewModal() {
       setIsLoading(false);
     }
   };
-
   const submitAction = mode === "unlock" ? handleDecrypt
     : mode === "update" ? handleUpdateRequest
     : mode === "delete" ? handleDeleteRequest
