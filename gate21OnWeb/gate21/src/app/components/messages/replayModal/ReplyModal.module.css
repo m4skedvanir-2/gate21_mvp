@@ -1,0 +1,58 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.input {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-1);
+  font-family: var(--font-body), sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.quote {
+  background: var(--bg-panel);
+  border-left: 3px solid var(--border-hi);
+  border-radius: 0 6px 6px 0;
+  padding: 10px 14px;
+  font-size: 11.5px;
+  color: var(--text-3);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.quoteLabel {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+}

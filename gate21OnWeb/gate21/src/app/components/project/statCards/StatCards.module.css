@@ -1,0 +1,66 @@
+/* app/components/project/statCards/StatCards.module.css */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px 17px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: default;
+}
+
+.card:hover {
+  border-color: var(--border-hi);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 10px 10px 0 0;
+}
+
+.green::before  { background: var(--accent); }
+.blue::before   { background: var(--blue); }
+.amber::before  { background: var(--amber); }
+.red::before    { background: var(--red); }
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 8px;
+  color: var(--text-3);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+
+.value {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.green .value  { color: var(--accent); }
+.blue .value   { color: var(--blue); }
+.amber .value  { color: var(--amber); }
+.red .value    { color: var(--red); }
+
+.desc {
+  font-size: 11px;
+  color: var(--text-3);
+}

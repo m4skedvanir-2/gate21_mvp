@@ -1,0 +1,13 @@
+/* app/components/dashboard/dashboard/Dashboard.module.css */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.grid32 {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 16px;
+}

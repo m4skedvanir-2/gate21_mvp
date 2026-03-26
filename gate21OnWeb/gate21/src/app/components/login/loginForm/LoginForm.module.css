@@ -1,0 +1,329 @@
+/* app/components/login/loginForm/LoginForm.module.css */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--bg-void);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 背景グリッド */
+.wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, var(--bg-void) 75%);
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Logo ── */
+.logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logoMark {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-1);
+}
+
+.logoMark em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.logoSub {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── Form box ── */
+.box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.3s;
+}
+
+.boxUnlocked {
+  border-color: var(--accent-brd);
+  box-shadow: var(--shadow), 0 0 30px rgba(0, 212, 170, 0.08);
+}
+
+/* ── Company reveal ── */
+.companyReveal {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease,
+    margin 0.4s ease;
+  margin-bottom: 0;
+}
+
+.companyRevealOpen {
+  max-height: 80px;
+  opacity: 1;
+  margin-bottom: 4px;
+}
+
+.companyName {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  padding: 8px 12px;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-brd);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.companyNameText {
+  /* グリッチアニメーション */
+  animation: glitchReveal 0.6s steps(1) forwards;
+}
+
+@keyframes glitchReveal {
+  0%   { content: ""; opacity: 0; }
+  10%  { opacity: 1; filter: blur(2px); letter-spacing: 0.3em; }
+  20%  { filter: blur(0); letter-spacing: 0.15em; color: #fff; }
+  30%  { letter-spacing: 0.08em; color: var(--red); }
+  40%  { color: var(--accent); letter-spacing: 0.12em; }
+  50%  { filter: blur(1px); }
+  60%  { filter: blur(0); color: #fff; }
+  70%  { color: var(--accent); }
+  80%  { letter-spacing: 0.14em; }
+  100% { letter-spacing: 0.12em; color: var(--accent); filter: blur(0); }
+}
+
+.glitch {
+  display: inline-block;
+  animation: glitchReveal 0.6s steps(1) forwards;
+}
+
+.verifiedIcon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* メールアドレス欄スライドイン */
+.emailReveal {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+    opacity 0.35s ease 0.3s;
+}
+
+.emailRevealOpen {
+  max-height: 80px;
+  opacity: 1;
+}
+
+/* ── Field ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-family: var(--font-mono), monospace;
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.input {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--text-1);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  padding: 10px 13px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.input::placeholder {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+}
+
+.inputError {
+  border-color: var(--red) !important;
+  box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.08) !important;
+}
+
+/* ── Error msg ── */
+.errorMsg {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: var(--red);
+  min-height: 16px;
+  letter-spacing: 0.05em;
+}
+
+/* ── Submit ── */
+.submitBtn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 7px;
+  border: none;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font-mono), monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.submitBtn:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 0 24px rgba(0, 212, 170, 0.35);
+}
+
+.submitBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Step indicator ── */
+.stepWrap {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.stepDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-hi);
+  transition: all 0.3s;
+}
+
+.stepDotActive {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  width: 18px;
+  border-radius: 3px;
+}
+
+/* ── 2FA ── */
+.tfaWrap {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tfaInput {
+  width: 44px;
+  height: 52px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-1);
+  font-family: var(--font-mono), monospace;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  caret-color: var(--accent);
+}
+
+.tfaInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.08);
+}
+
+.tfaDesc {
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 212, 170, 0.015) 2px,
+    rgba(0, 212, 170, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
+}

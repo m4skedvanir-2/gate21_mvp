@@ -1,0 +1,7 @@
+/* ap/components/project/projectDashboard/ProjectDashboard.module.css */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}

@@ -1,0 +1,132 @@
+/* app/components/documents/submitHistory/.css */
+
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.header {
+  padding: 13px 17px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.title {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.badge {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--bg-hover);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+
+.list {}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 17px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.item:last-child {
+  border-bottom: none;
+}
+
+.item:hover {
+  background: var(--bg-hover);
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono), monospace;
+  font-size: 7.5px;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.docTitle {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-1);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-family: var(--font-mono), monospace;
+  font-size: 9.5px;
+  color: var(--text-3);
+}
+
+.badgePending {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid var(--amber-brd);
+  flex-shrink: 0;
+}
+
+.badgeApproved {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-brd);
+  flex-shrink: 0;
+}
+
+.badgeRejected {
+  font-family: var(--font-mono), monospace;
+  font-size: 8.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-brd);
+  flex-shrink: 0;
+}
+
+.empty {
+  padding: 30px 17px;
+  text-align: center;
+  color: var(--text-3);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
